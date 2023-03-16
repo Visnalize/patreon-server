@@ -23,7 +23,10 @@ export async function getMembership(token) {
   const response = await fetch(encodeURI(url), {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return response.json();
+  return {
+    status: response.status,
+    ...(await response.json()),
+  };
 }
 
 export async function getTokens(code) {
@@ -32,7 +35,10 @@ export async function getTokens(code) {
     grant_type: "authorization_code",
     redirect_uri: REDIRECT_URL,
   });
-  return response.json();
+  return {
+    status: response.status,
+    ...(await response.json()),
+  };
 }
 
 export async function refreshTokens(refreshToken) {
@@ -40,5 +46,8 @@ export async function refreshTokens(refreshToken) {
     grant_type: "refresh_token",
     refresh_token: refreshToken,
   });
-  return response.json();
+  return {
+    status: response.status,
+    ...(await response.json()),
+  };
 }
