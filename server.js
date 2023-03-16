@@ -1,5 +1,5 @@
 import express from "express";
-import { getMembership, getTokens } from "./fetchers.js";
+import { getMembership, getTokens, refreshTokens } from "./fetchers.js";
 
 const app = express();
 
@@ -11,9 +11,9 @@ app.get("/auth", (req, res) =>
 );
 
 app.get("/tokens", (req, res) => {
-  getTokens(req.query.code)
-    .then((data) => res.json(data))
-    .catch((err) => res.send(err));
+  const { code, refresh } = req.query;
+  const request = code ? getTokens(code) : refreshTokens(refresh);
+  request.then((data) => res.json(data)).catch((err) => res.send(err));
 });
 
 app.get("/membership", (req, res) => {
